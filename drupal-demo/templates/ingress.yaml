@@ -19,8 +19,9 @@ metadata:
 spec:
   tls:
   - hosts:
+   - dgc24.mobomo.net
   rules:
-  - host: {{ .Release.Namespace }}.{{ .Values.dns_zone }}
+  - host: dgc24.mobomo.net
     http:
       paths:
       - path: /
