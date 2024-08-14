@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.project }}-site-install-{{ randNumeric 6 }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.project }}
+    role: job-site-install
+    tier: {{ .Values.tiers.php }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "0"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.project }}
+        role: job-site-install
+        tier: {{ .Values.tiers.php }}
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ .Values.project }}-php-site-install
+        image: {{ .Values.images.php.reg }}/{{ .Values.images.php.name }}:{{ .Values.images.php.tag }}
+        imagePullPolicy: {{ .Values.images.php.pullPolicy }}
+        command: [ "timeout", "600", "robo", "site:install" ]
+        workingDir: "/var/www"
+        env:
+{{ toYaml .Values.env.php | indent 8 }}
+        resources:
+{{ toYaml .Values.resources.php | indent 10 }}
+  backoffLimit: 1

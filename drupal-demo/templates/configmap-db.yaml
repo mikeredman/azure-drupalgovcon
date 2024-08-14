@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.project }}-configmap-db
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.project }}
+    role: configmap-db
+data:
+  {{- (.Files.Glob "files/configmap-db/*").AsConfig | nindent 2 }}

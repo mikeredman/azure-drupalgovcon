@@ -1,0 +1,67 @@
+project: drupal
+
+
+#ingress_class: addon-http-application-routing
+ingress_class: nginx
+
+containerPorts:
+  web: 80
+  php: 9000
+
+replicas:
+  web: 2
+  php: 3
+
+tiers:
+  web: web
+  php: app
+
+images:
+  web:
+    reg: dgc24acr.azurecr.io
+    name: mobomo/web
+    tag: latest
+    pullPolicy: Always
+  php:
+    reg: dgc24acr.azurecr.io
+    name: mobomo/php
+    tag: latest
+    pullPolicy: Always
+
+
+resources:
+  web:
+    requests:
+      cpu: "0.5"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "2048Mi"
+  php:
+    requests:
+      cpu: "0.5"
+      memory: "512Mi"
+    limits:
+      cpu: "4"
+      memory: "8192Mi"
+
+env:
+  web:
+  - name: PHP_HOST
+    value: php
+  - name: PHP_PORT
+    value: "9000"
+  php:
+  - name: DRUPAL_MYSQL_HOST
+    value: test
+  - name: MYSQL_USER
+    value: test
+  - name: MYSQL_DATABASE
+    value: test
+  - name: MYSQL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: test
+        key: password
+  - name: SHARED_TEMP_FOLDER
+    value: /opt/tmp/

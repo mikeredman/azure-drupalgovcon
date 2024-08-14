@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.project }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.project }}
+    role: web
+    tier: {{ .Values.tiers.web }}
+spec:
+  replicas: {{ .Values.replicas.web }}
+  selector:
+    matchLabels:
+      app: {{ .Values.project }}
+      role: web
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.project }}
+        role: web
+        tier: {{ .Values.tiers.web }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+      - name: {{ .Values.project }}-web
+        image: {{ .Values.images.web.reg }}/{{ .Values.images.web.name }}:{{ .Values.images.web.tag }}
+        imagePullPolicy: {{ .Values.images.web.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.containerPorts.web }}
+        command: ["/run_nginx.sh"]
+        env:
+{{ toYaml .Values.env.web | indent 8 }}
+        resources:
+{{ toYaml .Values.resources.web | indent 10 }}

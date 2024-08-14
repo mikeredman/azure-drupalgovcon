@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.project }}-php
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.project }}
+    role: php
+    tier: {{ .Values.tiers.php }}
+spec:
+  selector:
+    app: {{ .Values.project }}
+    role: php
+  ports:
+    - protocol: TCP
+      port: {{ .Values.containerPorts.php }}
+      targetPort: {{ .Values.containerPorts.php }}

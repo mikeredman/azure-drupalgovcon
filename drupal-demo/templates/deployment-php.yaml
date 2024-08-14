@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.project }}-php
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.project }}
+    role: php
+    tier: {{ .Values.tiers.php }}
+spec:
+  replicas: {{ .Values.replicas.php }}
+  selector:
+    matchLabels:
+      app: {{ .Values.project }}
+      role: php
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.project }}
+        role: php
+        tier: {{ .Values.tiers.php }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.project }}-php
+              topologyKey: "kubernetes.io/hostname"    
+      containers:
+      - name: {{ .Values.project }}-php
+        image: {{ .Values.images.php.reg }}/{{ .Values.images.php.name }}:{{ .Values.images.php.tag }}
+        imagePullPolicy: {{ .Values.images.php.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.containerPorts.php }}
+        command: ["/usr/local/bin/prod-entrypoint.sh"]
+        env:
+{{ toYaml .Values.env.php | indent 8 }}
+        resources:
+{{ toYaml .Values.resources.php | indent 10 }}
