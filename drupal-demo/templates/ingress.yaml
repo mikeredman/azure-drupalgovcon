@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
 spec:
-  - hosts:
+  hosts:
    - dgc24.mobomo.net
   rules:
   - host: dgc24.mobomo.net
