@@ -9,6 +9,7 @@ metadata:
     tier: {{ .Values.tiers.php }}
 spec:
   replicas: {{ .Values.replicas.php }}
+  revisionHistoryLimit: 0 # Default to 10 if not specified
   selector:
     matchLabels:
       app: {{ .Values.project }}

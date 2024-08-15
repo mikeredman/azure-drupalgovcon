@@ -9,6 +9,7 @@ metadata:
     tier: {{ .Values.tiers.web }}
 spec:
   replicas: {{ .Values.replicas.web }}
+  revisionHistoryLimit: 0 # Default to 10 if not specified
   selector:
     matchLabels:
       app: {{ .Values.project }}
