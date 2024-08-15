@@ -53,7 +53,7 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - drupal-data:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email sammy@your_domain --agree-tos --no-eff-email --staging -d your_domain -d www.your_domain
+    command: certonly --webroot --webroot-path=/var/www/html --email mike@mobomo.com --agree-tos --no-eff-email -d dgc24.mobomo.net -d www.dgc24.mobomo.net
 
 networks:
   external:

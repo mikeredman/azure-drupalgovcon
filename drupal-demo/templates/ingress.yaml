@@ -3,30 +3,16 @@ kind: Ingress
 metadata:
   name: {{ .Values.project }}-ingress
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ .Values.project }}
-    role: ingress
-  annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingress_class }}
-    nginx.ingress.kubernetes.io/proxy-buffering: "on"
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "256k"
-    nginx.ingress.kubernetes.io/proxy-buffers: "8 256k"
-    nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
 spec:
-  hosts:
-   - dgc24.mobomo.net
+  ingressClassName: webapprouting.kubernetes.azure.com
   rules:
   - host: dgc24.mobomo.net
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
             name: {{ .Values.project }}-web
-            port: 
+            port:
               number: {{ .Values.containerPorts.web }}
+        path: /
+        pathType: Prefix

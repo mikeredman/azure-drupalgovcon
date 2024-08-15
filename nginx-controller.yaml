@@ -1,0 +1,10 @@
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
+metadata:
+  name: nginx
+spec:
+  ingressClassName: nginx
+  controllerNamePrefix: nginx
+  loadBalancerAnnotations: 
+    service.beta.kubernetes.io/azure-pip-name: "myAKSPublicIP"
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "MC_DGC24_DGC-24-Drupal_eastus"
