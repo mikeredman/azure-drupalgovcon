@@ -9,8 +9,8 @@ containerPorts:
   php: 9000
 
 replicas:
-  web: 2
-  php: 3
+  web: 1
+  php: 1
 
 tiers:
   web: web
@@ -61,7 +61,7 @@ env:
   - name: MYSQL_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: test
+        name: drupal-secret-db
         key: password
   - name: SHARED_TEMP_FOLDER
     value: /opt/tmp/
