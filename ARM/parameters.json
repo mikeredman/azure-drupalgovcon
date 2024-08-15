@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_dgc24storage_name": {
+            "value": null
+        },
+        "registries_dgc24acr_name": {
+            "value": null
+        },
+        "managedClusters_DGC_24_Drupal_name": {
+            "value": null
+        },
+        "publicIPAddresses_50b912b1_138c_4663_89fd_d26095115438_externalid": {
+            "value": null
+        },
+        "userAssignedIdentities_DGC_24_Drupal_agentpool_externalid": {
+            "value": null
+        }
+    }
+}
