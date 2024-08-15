@@ -6,9 +6,9 @@ This project was created for DrupalGovCon 2024 and has the intent of providing a
 
 The following items are required in order to do most of the tasks within this repository:
 
-Docker - https://docs.docker.com/engine/install/
-Azure CLI - https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
-Azure Subscription - https://portal.azure.com/#home
+Docker - https://docs.docker.com/engine/install/\
+Azure CLI - https://learn.microsoft.com/en-us/cli/azure/install-azure-cli\
+Azure Subscription - https://portal.azure.com/#home\
 Azure DevOps Organization - https://dev.azure.com
 
 # RESOURCE DEPLOYMENT
@@ -16,7 +16,7 @@ Azure DevOps Organization - https://dev.azure.com
 There are lots of ways to create resources within Azure -- Terraform, Ansible, Azure ARM Templates, and manually via the portal to name a few. I personally prefer Terraform, but any of these options will work for creating your AKS Cluster and most include a way to create infrastructure with code and maintain a state if built correctly. 
 
 Quickstart guides for these: 
-Terraform - https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-terraform?pivots=development-environment-azure-cli
+Terraform - https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-terraform?pivots=development-environment-azure-cli\
 Azure RM - https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-rm-template?tabs=azure-cli
 
 # LOCAL DEVELOPMENT
