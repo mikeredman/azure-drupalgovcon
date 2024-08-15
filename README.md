@@ -39,4 +39,4 @@ The sample_pipeline.yml shows an example pipeline that utilizes Service Connecti
 
 This project was intended to function as a reference and a jumping off point to help people get started utilizing some of these features and gain some familiarity, but continuing development of the Dockerfile to add composer, static file storage, and a volume mount into the helm chart in order to host static files.
 
-A DB Service is also recommended to connect to 
+A DB Service is also recommended to connect to the AKS cluster in order for better availability among other benefits. 
