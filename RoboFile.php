@@ -68,7 +68,7 @@ class RoboFile extends Tasks {
     $this->say("remote site install started");
     $collection = $this->collectionBuilder();
     $collection->taskExec('while ! nc -w 2 -z $DRUPAL_MYSQL_HOST 3306; do sleep 1; done')
-      ->taskExec('drush si minimal --account-name=admin --account-pass=SuperSecurePassword -y install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL -vvv')
+      ->taskExec('drush si minimal --account-name=admin --account-pass= -y install_configure_form.enable_update_status_module=NULL install_configure_form.enable_update_status_emails=NULL -vvv')
       ->taskExec('drush cset system.site uuid 123456')
       ->taskExec('drush cim -y')
       ->taskExec('drush cim -y')
