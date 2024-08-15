@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.images.web.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPorts.web }}
-        command: ["/run_nginx.sh"]
+        command: ["nginx", "-g", "daemon off;"]
         env:
 {{ toYaml .Values.env.web | indent 8 }}
         resources:

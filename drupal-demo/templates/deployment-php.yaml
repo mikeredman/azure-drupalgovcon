@@ -40,7 +40,7 @@ spec:
         imagePullPolicy: {{ .Values.images.php.pullPolicy }}
         ports:
         - containerPort: {{ .Values.containerPorts.php }}
-        command: ["/usr/local/bin/prod-entrypoint.sh"]
+        command: ["php-fpm"]
         env:
 {{ toYaml .Values.env.php | indent 8 }}
         resources:
