@@ -9,8 +9,8 @@ containerPorts:
   php: 9000
 
 replicas:
-  web: 1
-  php: 1
+  web: 2
+  php: 3
 
 tiers:
   web: web
