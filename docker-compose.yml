@@ -12,12 +12,12 @@ services:
     networks:
       - internal
   
-  drupal:
+  php:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: php-prod
-    container_name: drupal
+    container_name: php
     depends_on:
       - mysql
     restart: unless-stopped
@@ -34,7 +34,7 @@ services:
       target: web-prod
     container_name: webserver
     depends_on:
-      - drupal
+      - php
     restart: unless-stopped
     ports:
       - 80:80

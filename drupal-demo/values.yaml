@@ -9,8 +9,8 @@ containerPorts:
   php: 9000
 
 replicas:
-  web: 2
-  php: 3
+  web: 1
+  php: 1
 
 tiers:
   web: web
@@ -55,7 +55,7 @@ env:
   - name: DRUPAL_MYSQL_HOST
     value: test
   - name: MYSQL_USER
-    value: test
+    value: drupaladmin@
   - name: MYSQL_DATABASE
     value: test
   - name: MYSQL_PASSWORD
