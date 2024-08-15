@@ -13,7 +13,10 @@ services:
       - internal
   
   drupal:
-    image: drupal:8.7.8-fpm-alpine
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: php-prod
     container_name: drupal
     depends_on:
       - mysql
@@ -25,7 +28,10 @@ services:
       - drupal-data:/var/www/html
   
   webserver:
-    image: nginx:1.17.4-alpine
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: web-prod
     container_name: webserver
     depends_on:
       - drupal
