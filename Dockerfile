@@ -55,6 +55,8 @@ WORKDIR /var/www/webroot
 FROM nginx:1.17.4-alpine as web-prod
 
 ENV NGINX_VERSION nginx-1.17.4
+
+COPY nginx-conf/nginx.conf /etc/nginx/conf.d/
     
 #COPY --from=php-prod /var/www/webroot /var/www/webroot
 
