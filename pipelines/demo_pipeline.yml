@@ -1,0 +1,130 @@
+trigger:
+    - none
+
+variables:
+    phpVersion: 8.2
+    registryServiceConnection: DGC24-ACR
+    registryRepo: mobomo
+    projectName: drupal-demo
+    azureSubscriptionEndpoint: DGC24-RG
+    azureResourceGroup: DGC24
+    kubernetesCluster: DGC-24-Drupal
+    kubernetesNamespace: drupal
+    releaseName: drupalgovcon
+    drupalThemeName: minimal
+
+stages:
+    - stage: prebuild_and_build_image
+      displayName: pre-build jobs
+      jobs:
+        - job: install_composer
+          displayName: install composer dependencies
+          pool:
+              vmImage: 'ubuntu-20.04'
+          steps:
+            - script: |
+                sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+                sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+                sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+                sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+                sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+                php -version
+              displayName: set PHP version to $(phpVersion)
+            - script: composer install --no-interaction --prefer-dist --version=2.0.9
+              displayName: run composer install
+        - job: compile_css_and_build_web
+          displayName: compile stylesheets
+          pool:
+            vmImage: 'ubuntu-20.04'
+          steps:
+            - task: CopyFiles@2
+              inputs:
+                contents: 'webroot/themes/custom/$(drupalThemeName)/css/**'
+                TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            - task: Docker@2
+              displayName: login to registry
+              inputs:
+                command: login
+                containerRegistry: $(registryServiceConnection)
+            - task: Docker@2
+              displayName: build web image
+              inputs:
+                command: build
+                Dockerfile: Dockerfile
+                buildContext: .
+                arguments: --target web-prod
+                repository: $(registryRepo)/$(projectName)-web
+                tags: |
+                    $(Build.BuildNumber)
+                    latest
+            - task: Docker@2
+              displayName: push web image to registry
+              inputs:
+                command: push
+                repository: $(registryRepo)/$(projectName)-web
+                tags: |
+                    $(Build.BuildNumber)
+                    latest
+            - task: Docker@2
+              displayName: login to registry
+              inputs:
+                command: login
+                containerRegistry: $(registryServiceConnection)
+            - task: Docker@2
+              displayName: build php image
+              inputs:
+                command: build
+                Dockerfile: Dockerfile
+                buildContext: .
+                arguments: --target php-prod
+                repository: $(registryRepo)/$(projectName)-php
+                tags: |
+                    $(Build.BuildNumber)
+                    latest
+            - task: Docker@2
+              displayName: push php image to registry
+              inputs:
+                command: push
+                repository: $(registryRepo)/$(projectName)-php
+                tags: |
+                    $(Build.BuildNumber)
+                    latest
+    - stage: deploy
+      jobs:
+        - job: helm_deploy
+          displayName: deploy to aks with helm
+          steps:
+            - script: |
+                curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+                chmod 700 get_helm.sh
+                ./get_helm.sh
+            - task: HelmDeploy@0
+              displayName: helm upgrade
+              inputs:
+                connectionType: Azure Resource Manager
+                azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+                azureResourceGroup: $(azureResourceGroup)
+                kubernetesCluster: $(kubernetesCluster)
+                command: upgrade
+                chartType: filepath
+                chartPath: ./$(projectName)
+                install: true
+                wait: true
+                arguments: --timeout 1800s
+                namespace: $(kubernetesNamespace)
+                releaseName: $(releaseName)
+        - job: cleanup
+          displayName: clean up after failed deploy
+          dependsOn: helm_deploy
+          condition: failed()
+          steps:
+            - task: Kubernetes@1
+              displayName: get logs
+              inputs:
+                connectionType: Azure Resource Manager
+                azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+                azureResourceGroup: $(azureResourceGroup)
+                kubernetesCluster: $(kubernetesCluster)
+                namespace: $(kubernetesNamespace)
+                command: logs
+                arguments: -lapp=drupal-demo --since=1h
