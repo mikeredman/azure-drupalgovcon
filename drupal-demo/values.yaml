@@ -19,12 +19,12 @@ tiers:
 images:
   web:
     reg: dgc24acr.azurecr.io
-    name: mobomo/web
+    name: mobomo/drupal-demo-web
     tag: latest
     pullPolicy: Always
   php:
     reg: dgc24acr.azurecr.io
-    name: mobomo/php
+    name: mobomo/drupal-demo-php
     tag: latest
     pullPolicy: Always
 
